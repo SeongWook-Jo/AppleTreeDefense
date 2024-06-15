@@ -25,10 +25,19 @@ public class Player : MonoBehaviour
 
     private static Player _instance;
 
-    private List<TreeInstance> _treeList;
+    public Dictionary<byte, TreeInstance> TreeList;
 
     private void Init()
     {
-        _treeList = new List<TreeInstance>();
+        TreeList = new Dictionary<byte, TreeInstance>();
+
+        TestSet();
+    }
+
+    private void TestSet()
+    {
+
+
+        TreeList.Add(1, new TreeInstance(1, true));
     }
 }

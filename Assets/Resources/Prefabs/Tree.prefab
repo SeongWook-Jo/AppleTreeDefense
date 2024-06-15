@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1997697579506635876}
   - component: {fileID: 3314881410324210847}
   - component: {fileID: 3781401670102555543}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,8 +91,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 323e818a54d799f4cbedaa01802999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createTime: 0
-  appleDropSpeed: 0
+  createTime: 1
+  appleDropSpeed: 5
 --- !u!1 &7762209599868663349
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,7 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3870171565784198410}
   - component: {fileID: 1887685161483257610}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}

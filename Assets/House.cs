@@ -13,4 +13,9 @@ public class House : MonoBehaviour
     {
         
     }
+
+    public void Hit()
+    {
+
+    }
 }

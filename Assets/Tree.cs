@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Tree : MonoBehaviour
+public class Tree : MonoBehaviour, IPointerClickHandler
 {
     public float createTime;
     public float appleDropSpeed;
@@ -19,8 +19,6 @@ public class Tree : MonoBehaviour
         _appleList = new List<Apple>();
 
         _applePref = Resources.Load<Apple>("Prefabs/Apple");
-
-        createTime = 3f;
     }
 
     void Update()
@@ -33,12 +31,6 @@ public class Tree : MonoBehaviour
 
             CreateApple();
         }
-    }
-
-    public void OnClick()
-    {
-        Debug.LogError("StartDrop");
-        AppleDrop();
     }
 
     public void AppleDrop()
@@ -55,10 +47,15 @@ public class Tree : MonoBehaviour
     {
         var ranPo = Random.insideUnitCircle;
 
-        var apple = Instantiate(_applePref, new Vector3(ranPo.x, ranPo.y, 0), Quaternion.identity);
+        var apple = Instantiate(_applePref, new Vector3(ranPo.x + transform.position.x, Mathf.Abs(ranPo.y) + transform.position.y, 0), Quaternion.identity);
 
         apple.dropSpeed = appleDropSpeed;
 
         _appleList.Add(apple);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        AppleDrop();
     }
 }
