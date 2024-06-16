@@ -13,6 +13,8 @@ public class InGameManager : MonoBehaviour
 
     private void Awake()
     {
+        InfoManager.Init();
+
         treeSpawner.Init();
         spawner.Init();
     }

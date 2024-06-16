@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeInfo : MonoBehaviour
+public class TreeInfo
 {
-    void Start()
-    {
-        
-    }
+    public int Id;
+    public string Name;
 
-    void Update()
+    public TreeInfo(int id, string name)
     {
-        
+        Id = id;
+        Name = name;
     }
 }
