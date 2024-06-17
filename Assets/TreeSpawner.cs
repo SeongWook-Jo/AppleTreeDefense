@@ -21,7 +21,7 @@ public class TreeSpawner : MonoBehaviour
 
             var treeObj = Instantiate(treePref, treePos[idx].position, Quaternion.identity);
 
-            treeObj.Init();
+            treeObj.Init(tree);
 
             idx++;
         }

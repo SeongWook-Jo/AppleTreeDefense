@@ -5,27 +5,36 @@ using UnityEngine.EventSystems;
 
 public class Tree : MonoBehaviour, IPointerClickHandler
 {
-    public float createTime;
     public float appleDropSpeed;
 
     private Apple _applePref;
 
     private List<Apple> _appleList;
 
+    private float _createTime;
     private float _tempTime;
 
-    public void Init()
+    private int _appleCount;
+
+    private TreeInstance _tree;
+
+    public void Init(TreeInstance tree)
     {
+        _tree = tree;
+
         _appleList = new List<Apple>();
 
         _applePref = Resources.Load<Apple>("Prefabs/Apple");
+
+        _createTime = _tree.GetGrowSpeed();
+        _appleCount = _tree.GetAppleCount();
     }
 
     void Update()
     {
         _tempTime += Time.deltaTime;
 
-        if (createTime < _tempTime)
+        if (_createTime < _tempTime)
         {
             _tempTime = 0;
 
@@ -45,13 +54,16 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     private void CreateApple()
     {
-        var ranPo = Random.insideUnitCircle;
+        while(_appleCount > _appleList.Count)
+        {
+            var ranPo = Random.insideUnitCircle;
 
-        var apple = Instantiate(_applePref, new Vector3(ranPo.x + transform.position.x, Mathf.Abs(ranPo.y) + transform.position.y, 0), Quaternion.identity);
+            var apple = Instantiate(_applePref, new Vector3(ranPo.x + transform.position.x, Mathf.Abs(ranPo.y) + transform.position.y, 0), Quaternion.identity);
 
-        apple.dropSpeed = appleDropSpeed;
+            apple.dropSpeed = appleDropSpeed;
 
-        _appleList.Add(apple);
+            _appleList.Add(apple);
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
