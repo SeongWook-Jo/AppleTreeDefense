@@ -39,7 +39,7 @@ public class StageManager : MonoBehaviour
     private void HouseInit()
     {
         var housePref = ResourceManager.GetPref<House>();
-        var house = Instantiate(housePref, housePosition);
+        var house = housePref.MakeInstance(housePosition);
 
         house.Init();
     }

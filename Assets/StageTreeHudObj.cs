@@ -20,7 +20,7 @@ public class StageTreeHudObj : MonoBehaviour
 
     public void UpdateProgree()
     {
-        SetProgress(_tree.GetCreateTime());
+        SetProgress(_tree.GetCreateProgress());
     }
 
     private void SetProgress(float progress)

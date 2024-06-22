@@ -11,7 +11,9 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     private Apple _applePref;
 
-    private List<Apple> _appleList;
+    private ObjectPool<Apple> _applePool;
+
+    private List<Apple> _attachedAppleList;
 
     private float _createTime;
     private float _tempTime;
@@ -24,9 +26,11 @@ public class Tree : MonoBehaviour, IPointerClickHandler
     {
         _tree = tree;
 
-        _appleList = new List<Apple>();
-
         _applePref = ResourceManager.GetPref<Apple>();
+
+        _applePool = new ObjectPool<Apple>(CreateApple, OnGet, OnRelease);
+
+        _attachedAppleList = new List<Apple>();
 
         _createTime = _tree.GetGrowSpeed();
         _appleCount = _tree.GetAppleCount();
@@ -42,34 +46,49 @@ public class Tree : MonoBehaviour, IPointerClickHandler
         {
             _tempTime = 0;
 
-            CreateApple();
+            while (_attachedAppleList.Count < _appleCount)
+            {
+                _applePool.Get();
+            }
         }
     }
 
     public void AppleDrop()
     {
-        while(_appleList.Count > 0)
-        {
-            var apple = _appleList[0];
+        foreach (var apple in _attachedAppleList)
             apple.Drop();
-            _appleList.RemoveAt(0);
-        }
+
+        _attachedAppleList.Clear();
     }
 
-    private void CreateApple()
+    private Apple CreateApple()
     {
-        while(_appleCount > _appleList.Count)
-        {
-            var ranPo = UnityEngine.Random.insideUnitCircle * 0.3f;
+        var apple = _applePref.MakeInstance(transform);
 
-            var apple = _applePref.MakeInstance(transform);
+        apple.Init(ReleaseApple);
 
-            apple.transform.localPosition += new Vector3(ranPo.x, ranPo.y);
+        return apple;
+    }
 
-            apple.dropSpeed = appleDropSpeed;
+    private void OnGet(Apple apple)
+    {
+        var ranPo = UnityEngine.Random.insideUnitCircle * 0.3f;
 
-            _appleList.Add(apple);
-        }
+        apple.Set(new Vector3(ranPo.x, ranPo.y), appleDropSpeed);
+
+        _attachedAppleList.Add(apple);
+
+        apple.gameObject.SetActive(true);
+    }
+
+    private void OnRelease(Apple apple)
+    {
+        apple.gameObject.SetActive(false);
+    }
+
+    private void ReleaseApple(Apple apple)
+    {
+        _applePool.Release(apple);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -77,7 +96,7 @@ public class Tree : MonoBehaviour, IPointerClickHandler
         AppleDrop();
     }
 
-    public float GetCreateTime()
+    public float GetCreateProgress()
     {
         return _tempTime / _createTime;
     }

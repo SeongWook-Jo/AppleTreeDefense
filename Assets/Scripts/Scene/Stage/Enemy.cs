@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Enemy : MonoBehaviour
 {
-    public float speed;
+    private float _speed;
 
     private bool _isAttack;
 
@@ -14,19 +15,17 @@ public class Enemy : MonoBehaviour
         _releaseAction = releaseAction;
     }
 
-    public void Set()
+    public void Set(Vector3 pos, float speed)
     {
         _isAttack = false;
+        _speed = speed;
+        transform.localPosition = pos;
     }
 
     public bool Hit()
     {
         if (gameObject.activeSelf == false)
             return false;
-
-        gameObject.SetActive(false);
-
-        Debug.LogError($"Hit {gameObject.GetInstanceID()}");
 
         _releaseAction?.Invoke(this);
 
@@ -46,7 +45,7 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         if (_isAttack == false)
-            transform.Translate(Vector3.left * Time.fixedDeltaTime * speed);
+            transform.Translate(Vector3.left * Time.fixedDeltaTime * _speed);
     }
 
     private void Attack(House house)

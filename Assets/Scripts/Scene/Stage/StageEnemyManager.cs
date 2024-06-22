@@ -19,7 +19,7 @@ public class StageEnemyManager : MonoBehaviour
     {
         _enemyPref = ResourceManager.GetPref<Enemy>();
 
-        _enemyPool = new ObjectPool<Enemy>(CreateEnemy, SetEnemy);
+        _enemyPool = new ObjectPool<Enemy>(CreateEnemy, OnGet, OnRelease);
     }
 
     private void Update()
@@ -41,17 +41,18 @@ public class StageEnemyManager : MonoBehaviour
         return enemy;
     }
 
-    private void SetEnemy(Enemy enemy)
+    private void OnGet(Enemy enemy)
     {
         var randomYPos = Random.Range(-0.5f, 0.5f);
 
-        enemy.transform.localPosition = Vector3.up * randomYPos;
-
-        enemy.speed = enemySpeed;
-
-        enemy.Set();
+        enemy.Set(Vector3.up * randomYPos, enemySpeed);
 
         enemy.gameObject.SetActive(true);
+    }
+
+    private void OnRelease(Enemy enemy)
+    {
+        enemy.gameObject.SetActive(false);
     }
 
     private void ReturnToPool(Enemy enemy)

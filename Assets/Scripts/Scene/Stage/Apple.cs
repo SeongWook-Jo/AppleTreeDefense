@@ -1,25 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Apple : MonoBehaviour
 {
-    public Collider2D collider;
+    private static readonly float MaxDropTime = 5f;
 
-    public float dropSpeed;
-    public bool IsDrop { get; private set; }
+
+    private bool _isDrop;
+
+    private float _dropSpeed;
+
+    private float _dropTime;
+
+    private Action<Apple> _releaseAction;
+
+    public void Init(Action<Apple> releaseAction)
+    {
+        _releaseAction = releaseAction;
+    }
+
+    public void Set(Vector3 pos, float dropSpeed)
+    {
+        transform.localPosition = pos;
+
+        _isDrop = false;
+
+        _dropSpeed = dropSpeed;
+    }
 
     public void Drop()
     {
-        collider.enabled = true;
-        IsDrop = true;
+        _dropTime = 0;
+
+        _isDrop = true;
     }
 
     private void FixedUpdate()
     {
-        if (IsDrop)
+        if (_isDrop)
         {
-            transform.Translate(new Vector3(0, -dropSpeed, 0) * Time.fixedDeltaTime);
+            _dropTime += Time.fixedDeltaTime;
+
+            if (_dropTime > MaxDropTime )
+            {
+                _releaseAction?.Invoke(this);
+
+                return;
+            }
+
+            transform.Translate(new Vector3(0, -(_dropSpeed), 0) * Time.fixedDeltaTime);
         }
     }
 
@@ -34,6 +65,6 @@ public class Apple : MonoBehaviour
         if (enemy == null) return;
 
         if (enemy.Hit())
-            Destroy(gameObject);
+            _releaseAction?.Invoke(this);
     }
 }
