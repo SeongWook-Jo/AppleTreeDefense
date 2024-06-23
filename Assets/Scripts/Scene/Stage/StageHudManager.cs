@@ -30,4 +30,14 @@ public class StageHudManager : MonoBehaviour
             obj.UpdateProgree();
         }
     }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
 }

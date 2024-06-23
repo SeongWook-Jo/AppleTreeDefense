@@ -14,6 +14,8 @@ public class StageManager : MonoBehaviour
 
     public Transform housePosition;
 
+    private bool _isGameStart;
+
     private void Awake()
     {
         InfoManager.Init();
@@ -23,17 +25,37 @@ public class StageManager : MonoBehaviour
 
     public void Init()
     {
+        uiManager.Init(GameStart);
+        hudManager.Init();
+
         stageTreeManager.Init(CreateTreeHud);
         stageEnemyManager.Init();
-        hudManager.Init();
         HouseInit();
 
-        GameStart();
+        stageTreeManager.CreateTree();
+
+        hudManager.Hide();
     }
 
     private void GameStart()
     {
-        stageTreeManager.CreateTree();
+        _isGameStart = true;
+
+        hudManager.Show();
+    }
+
+    private void GameEnd()
+    {
+        if (_isGameStart == false)
+            return;
+
+        _isGameStart = false;
+
+        stageEnemyManager.Clear();
+        stageTreeManager.Clear();
+        hudManager.Hide();
+
+        uiManager.ChangeShowType(StageUiManager.ShowType.Ready);
     }
 
     private void HouseInit()
@@ -41,7 +63,7 @@ public class StageManager : MonoBehaviour
         var housePref = ResourceManager.GetPref<House>();
         var house = housePref.MakeInstance(housePosition);
 
-        house.Init();
+        house.Init(GameEnd);
     }
 
     private void CreateTreeHud(Tree tree)
@@ -51,6 +73,13 @@ public class StageManager : MonoBehaviour
 
     private void Update()
     {
+        if (_isGameStart == false)
+            return;
+
+        var dt = Time.deltaTime;
+
         hudManager.UpdateObjs();
+        stageEnemyManager.UpdateObjs(dt);
+        stageTreeManager.UpdateObjs(dt);
     }
 }

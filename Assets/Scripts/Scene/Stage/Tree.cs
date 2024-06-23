@@ -14,11 +14,12 @@ public class Tree : MonoBehaviour, IPointerClickHandler
     private ObjectPool<Apple> _applePool;
 
     private List<Apple> _attachedAppleList;
+    private List<Apple> _activeAppleList;
 
     private float _createTime;
     private float _tempTime;
 
-    private int _appleCount;
+    private int _createAppleCount;
 
     private TreeInstance _tree;
 
@@ -28,25 +29,26 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
         _applePref = ResourceManager.GetPref<Apple>();
 
-        _applePool = new ObjectPool<Apple>(CreateApple, OnGet, OnRelease);
+        _applePool = new ObjectPool<Apple>(CreateApple, OnGet, OnRelease, OnDestroyObj);
 
         _attachedAppleList = new List<Apple>();
+        _activeAppleList = new List<Apple>();
 
         _createTime = _tree.GetGrowSpeed();
-        _appleCount = _tree.GetAppleCount();
+        _createAppleCount = _tree.GetAppleCount();
 
         createAction?.Invoke(this);
     }
 
-    void Update()
+    public void UpdateObj(float dt)
     {
-        _tempTime += Time.deltaTime;
+        _tempTime += dt;
 
         if (_createTime < _tempTime)
         {
             _tempTime = 0;
 
-            while (_attachedAppleList.Count < _appleCount)
+            while (_attachedAppleList.Count < _createAppleCount)
             {
                 _applePool.Get();
             }
@@ -77,18 +79,26 @@ public class Tree : MonoBehaviour, IPointerClickHandler
         apple.Set(new Vector3(ranPo.x, ranPo.y), appleDropSpeed);
 
         _attachedAppleList.Add(apple);
+        _activeAppleList.Add(apple);
 
         apple.gameObject.SetActive(true);
     }
 
     private void OnRelease(Apple apple)
     {
+        _activeAppleList.Remove(apple);
+
         apple.gameObject.SetActive(false);
     }
 
     private void ReleaseApple(Apple apple)
     {
         _applePool.Release(apple);
+    }
+
+    private void OnDestroyObj(Apple apple)
+    {
+        Destroy(apple);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -99,5 +109,13 @@ public class Tree : MonoBehaviour, IPointerClickHandler
     public float GetCreateProgress()
     {
         return _tempTime / _createTime;
+    }
+
+    public void Clear()
+    {
+        _attachedAppleList.Clear();
+
+        while (_activeAppleList.Count > 0)
+            _applePool.Release(_activeAppleList[0]);
     }
 }

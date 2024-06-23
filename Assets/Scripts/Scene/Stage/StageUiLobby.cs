@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LobbySceneManager : MonoBehaviour
+public class StageUiLobby : MonoBehaviour
 {
     void Start()
     {

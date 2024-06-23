@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StageTreeManager : MonoBehaviour
@@ -7,11 +8,15 @@ public class StageTreeManager : MonoBehaviour
 
     private Tree _treePref;
 
+    private List<Tree> _treeList;
+
     private Action<Tree> _createTreeAction;
 
     public void Init(Action<Tree> createTreeAction)
     {
         _treePref = ResourceManager.GetPref<Tree>();
+
+        _treeList = new List<Tree>();
 
         _createTreeAction = createTreeAction;
     }
@@ -34,7 +39,21 @@ public class StageTreeManager : MonoBehaviour
 
             treeObj.Init(Player.Instance.TreeList[garden.Key], _createTreeAction);
 
+            _treeList.Add(treeObj);
+
             idx++;
         }
+    }
+
+    public void Clear()
+    {
+        foreach (var tree in _treeList)
+            tree.Clear();
+    }
+    
+    public void UpdateObjs(float dt)
+    {
+        foreach (var tree in _treeList)
+            tree.UpdateObj(dt);
     }
 }

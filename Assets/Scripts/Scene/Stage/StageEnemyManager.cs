@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -11,6 +12,8 @@ public class StageEnemyManager : MonoBehaviour
 
     private ObjectPool<Enemy> _enemyPool;
 
+    private List<Enemy> _activeEnemyList;
+
     private Enemy _enemyPref;
 
     private float _tempTime;
@@ -19,12 +22,14 @@ public class StageEnemyManager : MonoBehaviour
     {
         _enemyPref = ResourceManager.GetPref<Enemy>();
 
-        _enemyPool = new ObjectPool<Enemy>(CreateEnemy, OnGet, OnRelease);
+        _activeEnemyList = new List<Enemy>();
+
+        _enemyPool = new ObjectPool<Enemy>(CreateEnemy, OnGet, OnRelease, OnDestroyObj);
     }
 
-    private void Update()
+    public void UpdateObjs(float dt)
     {
-        _tempTime += Time.deltaTime;
+        _tempTime += dt;
 
         if (_tempTime > createTime)
         {
@@ -47,16 +52,31 @@ public class StageEnemyManager : MonoBehaviour
 
         enemy.Set(Vector3.up * randomYPos, enemySpeed);
 
+        _activeEnemyList.Add(enemy);
+
         enemy.gameObject.SetActive(true);
     }
 
     private void OnRelease(Enemy enemy)
     {
+        _activeEnemyList.Remove(enemy);
+
         enemy.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyObj(Enemy enemy)
+    {
+        Destroy(enemy);
     }
 
     private void ReturnToPool(Enemy enemy)
     {
         _enemyPool.Release(enemy);
+    }
+
+    public void Clear()
+    {
+        while (_activeEnemyList.Count > 0)
+            _enemyPool.Release(_activeEnemyList[0]);
     }
 }
