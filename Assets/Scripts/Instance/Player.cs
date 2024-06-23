@@ -26,15 +26,21 @@ public class Player
 
     #endregion
 
-    #region Values
-    
-    public int Gold { get; private set; }
-    public int LastestClearStage;
+    #region Property
+
+    public int Gold => _gold;
+    private int _gold;
+
+    public int LastestClearStage => _lastestClearStage;
+    private int _lastestClearStage;
 
     #endregion
 
     #region Instance
-    public HouseInstance House;
+    public HouseInstance House => _house;
+
+    private HouseInstance _house;
+
     public Dictionary<int, GardenInstance> GardenList => _gardenList;
 
     private Dictionary<int, GardenInstance> _gardenList;
@@ -51,7 +57,7 @@ public class Player
     {
         _gardenList = new Dictionary<int, GardenInstance>();
         _treeList = new Dictionary<int, TreeInstance>();
-        House = new HouseInstance();
+        _house = new HouseInstance();
     }
 
     private void CreateNewAccountForTest()
@@ -62,7 +68,7 @@ public class Player
             _treeList.Add(i, new TreeInstance(1, 1, 1));
         }
 
-        LastestClearStage = 10;
+        _lastestClearStage = 10;
         
         House.SetHealthLevel(1);
 
