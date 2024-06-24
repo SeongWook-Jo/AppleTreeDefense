@@ -8,4 +8,9 @@ public class ResourceManager
     {
         return Resources.Load<T>($"Prefabs/{typeof(T).ToString()}");
     }
+
+    public static GameObject GetGameObjPref(string name)
+    {
+        return Resources.Load<GameObject>($"Prefabs/{name}");
+    }
 }

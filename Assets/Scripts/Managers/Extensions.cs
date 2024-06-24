@@ -18,6 +18,11 @@ public static class Extensions
         return Object.Instantiate<T>(obj, parent);
     }
 
+    public static GameObject MakeInstance(this GameObject obj, Transform parent)
+    {
+        return Object.Instantiate(obj, parent);
+    }
+
     public static void On<T>(this T obj) where T : MonoBehaviour
     {
         obj.gameObject.SetActive(true);

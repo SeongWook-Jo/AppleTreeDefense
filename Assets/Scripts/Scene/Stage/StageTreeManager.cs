@@ -8,6 +8,8 @@ public class StageTreeManager : MonoBehaviour
 
     private Tree _treePref;
 
+    private GameObject _tilePref;
+
     private List<Tree> _treeList;
 
     private Action<Tree> _createTreeAction;
@@ -16,6 +18,8 @@ public class StageTreeManager : MonoBehaviour
     {
         _treePref = ResourceManager.GetPref<Tree>();
 
+        _tilePref = ResourceManager.GetGameObjPref("Tile");
+
         _treeList = new List<Tree>();
 
         _createTreeAction = createTreeAction;
@@ -23,6 +27,11 @@ public class StageTreeManager : MonoBehaviour
 
     public void CreateTree()
     {
+        foreach(var pos in treePos)
+        {
+            _tilePref.MakeInstance(pos);
+        }
+
         var idx = 0;
 
         foreach (var garden in Player.Instance.GardenList)
