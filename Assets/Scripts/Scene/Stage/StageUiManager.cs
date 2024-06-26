@@ -17,10 +17,14 @@ public class StageUiManager : MonoBehaviour
     public StageUiReady uiReady;
     public StageUiPlaying uiPlaying;
 
+    private StageManager _manager;
+
     private Action _startAction;
     
-    public void Init(Action startAction)
+    public void Init(StageManager manager, Action startAction)
     {
+        _manager = manager;
+
         _startAction = startAction;
 
         uiReady.Init(StartAction);

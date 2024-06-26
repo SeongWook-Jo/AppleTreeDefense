@@ -7,8 +7,9 @@ public class Apple : MonoBehaviour
 {
     private static readonly float MaxDropTime = 5f;
 
-
     private bool _isDrop;
+
+    private bool _isAlive;
 
     private float _dropSpeed;
 
@@ -27,6 +28,8 @@ public class Apple : MonoBehaviour
 
         _isDrop = false;
 
+        _isAlive = true;
+
         _dropSpeed = dropSpeed;
     }
 
@@ -43,7 +46,7 @@ public class Apple : MonoBehaviour
         {
             _dropTime += Time.fixedDeltaTime;
 
-            if (_dropTime > MaxDropTime )
+            if (_dropTime > MaxDropTime)
             {
                 _releaseAction?.Invoke(this);
 
@@ -60,11 +63,17 @@ public class Apple : MonoBehaviour
 
         if (collision.gameObject == null) return;
 
+        if (_isAlive == false) return;
+
         var enemy = collision.GetComponent<Enemy>();
 
         if (enemy == null) return;
 
-        if (enemy.Hit())
+        if (enemy.Hit(1f))
+        {
+            _isAlive = false;
+
             _releaseAction?.Invoke(this);
+        }
     }
 }

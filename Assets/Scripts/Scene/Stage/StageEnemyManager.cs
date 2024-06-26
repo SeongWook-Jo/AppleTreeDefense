@@ -18,8 +18,12 @@ public class StageEnemyManager : MonoBehaviour
 
     private float _tempTime;
 
-    public void Init()
+    private StageManager _manager;
+
+    public void Init(StageManager manager)
     {
+        _manager = manager;
+
         _enemyPref = ResourceManager.GetPref<Enemy>();
 
         _activeEnemyList = new List<Enemy>();
@@ -27,22 +31,19 @@ public class StageEnemyManager : MonoBehaviour
         _enemyPool = new ObjectPool<Enemy>(CreateEnemy, OnGet, OnRelease, OnDestroyObj);
     }
 
-    public void UpdateObjs(float dt)
+    public void CreateEnemies(int[] enemies)
     {
-        _tempTime += dt;
-
-        if (_tempTime > createTime)
+        foreach (var enemyId in enemies)
         {
-            _tempTime = 0;
-
-            _enemyPool.Get();
+            var enemy = _enemyPool.Get();
+            enemy.Set(InfoManager.EnemyInfos[enemyId]);
         }
     }
 
     private Enemy CreateEnemy()
     {
         var enemy = _enemyPref.MakeInstance(enemyPos);
-        enemy.Init(ReturnToPool);
+        enemy.Init(EnemyDieAction);
         return enemy;
     }
 
@@ -50,7 +51,7 @@ public class StageEnemyManager : MonoBehaviour
     {
         var randomYPos = Random.Range(-0.5f, 0.5f);
 
-        enemy.Set(Vector3.up * randomYPos, enemySpeed);
+        enemy.SetRandomPos(Vector3.up * randomYPos);
 
         _activeEnemyList.Add(enemy);
 
@@ -72,6 +73,12 @@ public class StageEnemyManager : MonoBehaviour
     private void ReturnToPool(Enemy enemy)
     {
         _enemyPool.Release(enemy);
+    }
+
+    private void EnemyDieAction(Enemy enemy)
+    {
+        //dropGold, missionCheck, 
+        ReturnToPool(enemy);
     }
 
     public void Clear()

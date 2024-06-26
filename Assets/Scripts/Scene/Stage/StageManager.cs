@@ -1,7 +1,11 @@
+using System.Collections;
+
 using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
+    public static GameState CurrGameState { get; private set; }
+
     public Camera gameCamera;
 
     public StageUiManager uiManager;
@@ -14,22 +18,43 @@ public class StageManager : MonoBehaviour
 
     public Transform housePosition;
 
-    private bool _isGameStart;
+    private House _house;
+
+    private StageInfo _stageInfo;
+
+    private int[] _waves;
+
+    private int[] _enemies;
+
+    private int _currWaveIdx;
+
+    private int _stageId;
+
+    private float _waveTerm;
+
+    private float _enemyCreateTime;
 
     private void Awake()
     {
         InfoManager.Init();
 
         Player.Instance.Load(Init);
+
+        SetGameState(GameState.Lobby);
+    }
+
+    private void SetGameState(GameState state)
+    {
+        CurrGameState = state;
     }
 
     public void Init()
     {
-        uiManager.Init(GameStart);
-        hudManager.Init();
+        uiManager.Init(this, GameStart);
+        hudManager.Init(this);
 
-        stageTreeManager.Init(CreateTreeHud);
-        stageEnemyManager.Init();
+        stageTreeManager.Init(this, CreateTreeHud);
+        stageEnemyManager.Init(this);
         HouseInit();
 
         stageTreeManager.CreateTree();
@@ -39,17 +64,47 @@ public class StageManager : MonoBehaviour
 
     private void GameStart()
     {
-        _isGameStart = true;
+        _house.Set();
+
+        SetGameState(GameState.Playing);
 
         hudManager.Show();
+
+        SetStage(1);
+    }
+
+
+    //stageinfo waves -> wave -> enemies
+
+    private void SetStage(int stageId)
+    {
+        if (InfoManager.StageInfos.ContainsKey(stageId) == false)
+            return;
+
+        _stageId = stageId;
+
+        _stageInfo = InfoManager.StageInfos[stageId];
+
+        _waveTerm = _stageInfo.WaveTerm;
+        _waves = _stageInfo.Waves;
+
+        SetWave(0);
+    }
+
+    private void SetWave(int waveIdx)
+    {
+        _currWaveIdx = waveIdx;
+
+        var enemies = InfoManager.WaveInfos[_waves[_currWaveIdx]].Enemies;
+
+        stageEnemyManager.CreateEnemies(enemies);
     }
 
     private void GameEnd()
     {
-        if (_isGameStart == false)
-            return;
+        Debug.LogError("GameEnd");
 
-        _isGameStart = false;
+        SetGameState(GameState.Lobby);
 
         stageEnemyManager.Clear();
         stageTreeManager.Clear();
@@ -61,9 +116,15 @@ public class StageManager : MonoBehaviour
     private void HouseInit()
     {
         var housePref = ResourceManager.GetPref<House>();
-        var house = housePref.MakeInstance(housePosition);
 
-        house.Init(GameEnd);
+        _house = housePref.MakeInstance(housePosition);
+
+        _house.Init(GameEnd, ClickHouse);
+    }
+
+    private void ClickHouse()
+    {
+
     }
 
     private void CreateTreeHud(Tree tree)
@@ -73,13 +134,33 @@ public class StageManager : MonoBehaviour
 
     private void Update()
     {
-        if (_isGameStart == false)
+        if (CurrGameState != GameState.Playing)
             return;
 
         var dt = Time.deltaTime;
 
+        _enemyCreateTime += dt;
+
+        if (_enemyCreateTime > _waveTerm)
+        {
+            _enemyCreateTime = 0;
+
+            NextWave();
+        }
+
         hudManager.UpdateObjs();
-        stageEnemyManager.UpdateObjs(dt);
         stageTreeManager.UpdateObjs(dt);
+    }
+
+    private void NextWave()
+    {
+        if (_currWaveIdx >= _waves.Length - 1)
+        {
+            SetStage(_stageId + 1);
+
+            return;
+        }
+
+        SetWave(_currWaveIdx + 1);
     }
 }

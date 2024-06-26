@@ -1,31 +1,47 @@
 using JetBrains.Annotations;
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class House : MonoBehaviour
+public class House : MonoBehaviour, IPointerClickHandler
 {
     public float Health { get; private set; }
 
-    public int currHealth;
+    private float _currHealth;
 
     private Action _dieAciton;
 
-    public void Init(Action dieAciton)
-    {
-        var house = Player.Instance.House;
+    private Action _clickAction;
 
-        Health = house.GetHealth();
+    private HouseInstance _house;
+
+    public void Init(Action dieAciton, Action clickAction)
+    {
+        _house = Player.Instance.House;
 
         _dieAciton = dieAciton;
 
-        currHealth = 2;
+        _clickAction = clickAction;
     }
 
-    public void Hit()
+    public void Set()
     {
-        currHealth--;
+        Health = _house.GetHealth();
 
-        if (currHealth <= 0)
+        //Test
+        _currHealth = 10000;
+    }
+
+    public void Hit(float damage)
+    {
+        _currHealth -= damage;
+
+        if (_currHealth <= 0)
             _dieAciton?.Invoke();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        _clickAction?.Invoke();
     }
 }

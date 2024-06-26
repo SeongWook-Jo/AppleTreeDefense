@@ -42,6 +42,9 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     public void UpdateObj(float dt)
     {
+        if (gameObject.activeSelf == false)
+            return;
+
         _tempTime += dt;
 
         if (_createTime < _tempTime)

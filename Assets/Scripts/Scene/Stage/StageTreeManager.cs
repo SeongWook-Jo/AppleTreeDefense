@@ -14,8 +14,12 @@ public class StageTreeManager : MonoBehaviour
 
     private Action<Tree> _createTreeAction;
 
-    public void Init(Action<Tree> createTreeAction)
+    private StageManager _manager;
+
+    public void Init(StageManager manager, Action<Tree> createTreeAction)
     {
+        _manager = manager;
+
         _treePref = ResourceManager.GetPref<Tree>();
 
         _tilePref = ResourceManager.GetGameObjPref("Tile");

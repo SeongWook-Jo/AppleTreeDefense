@@ -20,6 +20,9 @@ public class StageTreeHudObj : MonoBehaviour
 
     public void UpdateProgree()
     {
+        if (gameObject.activeSelf == false)
+            return;
+
         SetProgress(_tree.GetCreateProgress());
     }
 

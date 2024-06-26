@@ -8,8 +8,11 @@ public class StageHudManager : MonoBehaviour
 
     private List<StageTreeHudObj> _treeHudObjList;
 
-    public void Init()
+    private StageManager _manager;
+
+    public void Init(StageManager manager)
     {
+        _manager = manager;
         _treeHudObjPref = ResourceManager.GetPref<StageTreeHudObj>();
         _treeHudObjList = new List<StageTreeHudObj>();
     }

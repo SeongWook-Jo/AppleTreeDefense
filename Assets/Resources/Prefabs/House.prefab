@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1921215651506370055}
   - component: {fileID: 5357121442752204766}
   - component: {fileID: 2278316049215008356}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: House
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 820656e2796682f4d8a683a1d410e73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currHealth: 0
 --- !u!61 &2278316049215008356
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -102,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7968955566153247150}
   - component: {fileID: 2102983024231797385}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

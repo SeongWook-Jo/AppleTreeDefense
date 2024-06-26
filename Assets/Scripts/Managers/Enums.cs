@@ -4,8 +4,14 @@ public enum TreeStatType
     AppleCount,
 }
 
-public enum SceneType
+public enum GameState
 {
-    LobbyScene,
-    StageScene,
+    Lobby,
+    Playing,
+}
+
+public enum AttackType
+{
+    Melee,
+    Range,
 }
