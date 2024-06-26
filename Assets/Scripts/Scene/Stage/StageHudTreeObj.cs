@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StageTreeHudObj : MonoBehaviour
+public class StageHudTreeObj : MonoBehaviour
 {
     public Image front;
 
@@ -20,9 +20,6 @@ public class StageTreeHudObj : MonoBehaviour
 
     public void UpdateProgree()
     {
-        if (gameObject.activeSelf == false)
-            return;
-
         SetProgress(_tree.GetCreateProgress());
     }
 

@@ -28,8 +28,7 @@ public class House : MonoBehaviour, IPointerClickHandler
     {
         Health = _house.GetHealth();
 
-        //Test
-        _currHealth = 10000;
+        _currHealth = Health;
     }
 
     public void Hit(float damage)
@@ -42,6 +41,14 @@ public class House : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        _clickAction?.Invoke();
+        if (StageManager.CurrGameState == GameState.Lobby)
+        {
+            _clickAction?.Invoke();
+        }
+    }
+
+    public float GetHealthProgress()
+    {
+        return _currHealth / Health;
     }
 }

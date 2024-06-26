@@ -50,7 +50,7 @@ public class StageTreeManager : MonoBehaviour
 
             var treeObj = _treePref.MakeInstance(treePos[idx]);
 
-            treeObj.Init(Player.Instance.TreeList[garden.Key], _createTreeAction);
+            treeObj.Init(garden.Key, Player.Instance.TreeList[garden.Key], _createTreeAction, _manager.ClickTreeInLobby);
 
             _treeList.Add(treeObj);
 

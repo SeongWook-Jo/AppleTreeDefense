@@ -120,16 +120,23 @@ public class StageManager : MonoBehaviour
         _house = housePref.MakeInstance(housePosition);
 
         _house.Init(GameEnd, ClickHouse);
+
+        hudManager.CreateHouseHud(_house);
     }
 
     private void ClickHouse()
     {
+        Debug.LogError("clickhouse");
+    }
 
+    public void ClickTreeInLobby(int gardenId)
+    {
+        Debug.LogError($"clicktreeinlobby id {gardenId}");
     }
 
     private void CreateTreeHud(Tree tree)
     {
-        hudManager.CreateTreeHud(gameCamera, tree);
+        hudManager.CreateTreeHud(tree);
     }
 
     private void Update()

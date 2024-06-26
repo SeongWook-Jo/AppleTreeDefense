@@ -19,13 +19,20 @@ public class Tree : MonoBehaviour, IPointerClickHandler
     private float _createTime;
     private float _tempTime;
 
+    private int _gardenId;
     private int _createAppleCount;
 
     private TreeInstance _tree;
 
-    public void Init(TreeInstance tree, Action<Tree> createAction)
+    private Action<int> _lobbyStateClickAction;
+
+    public void Init(int gardenId, TreeInstance tree, Action<Tree> createAction, Action<int> lobbyStateClickAction)
     {
+        _gardenId = gardenId;
+
         _tree = tree;
+
+        _lobbyStateClickAction = lobbyStateClickAction;
 
         _applePref = ResourceManager.GetPref<Apple>();
 
@@ -106,7 +113,14 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        AppleDrop();
+        if (StageManager.CurrGameState == GameState.Playing)
+        {
+            AppleDrop();
+        }
+        else if (StageManager.CurrGameState == GameState.Lobby)
+        {
+            _lobbyStateClickAction?.Invoke(_gardenId);
+        }
     }
 
     public float GetCreateProgress()
