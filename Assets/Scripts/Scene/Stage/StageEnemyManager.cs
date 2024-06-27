@@ -6,17 +6,11 @@ public class StageEnemyManager : MonoBehaviour
 {
     public Transform enemyPos;
 
-    public float createTime;
-
-    public float enemySpeed;
-
     private ObjectPool<Enemy> _enemyPool;
 
     private List<Enemy> _activeEnemyList;
 
     private Enemy _enemyPref;
-
-    private float _tempTime;
 
     private StageManager _manager;
 

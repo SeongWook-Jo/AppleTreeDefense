@@ -70,6 +70,8 @@ public class StageManager : MonoBehaviour
 
         hudManager.Show();
 
+        Debug.LogError("GameStart");
+
         SetStage(1);
     }
 
@@ -79,7 +81,13 @@ public class StageManager : MonoBehaviour
     private void SetStage(int stageId)
     {
         if (InfoManager.StageInfos.ContainsKey(stageId) == false)
+        {
+            Debug.LogError("StageEnd");
+
             return;
+        }
+
+        Debug.LogError($"Start Stage {stageId}");
 
         _stageId = stageId;
 
@@ -93,6 +101,8 @@ public class StageManager : MonoBehaviour
 
     private void SetWave(int waveIdx)
     {
+        Debug.LogError($"StartWaveIdx {waveIdx}");
+
         _currWaveIdx = waveIdx;
 
         var enemies = InfoManager.WaveInfos[_waves[_currWaveIdx]].Enemies;
@@ -168,6 +178,8 @@ public class StageManager : MonoBehaviour
             return;
         }
 
-        SetWave(_currWaveIdx + 1);
+        var nextWaveIdx = _currWaveIdx + 1;
+
+        SetWave(nextWaveIdx);
     }
 }
