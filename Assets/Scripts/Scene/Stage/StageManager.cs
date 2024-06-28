@@ -12,9 +12,9 @@ public class StageManager : MonoBehaviour
 
     public StageHudManager hudManager;
 
-    public StageTreeManager stageTreeManager;
+    public StageTreeManager treeManager;
 
-    public StageEnemyManager stageEnemyManager;
+    public StageEnemyManager enemyManager;
 
     public Transform housePosition;
 
@@ -33,6 +33,8 @@ public class StageManager : MonoBehaviour
     private float _waveTerm;
 
     private float _enemyCreateTime;
+
+    private int _inGameGold;
 
     private void Awake()
     {
@@ -53,30 +55,44 @@ public class StageManager : MonoBehaviour
         uiManager.Init(this, GameStart);
         hudManager.Init(this);
 
-        stageTreeManager.Init(this, CreateTreeHud);
-        stageEnemyManager.Init(this);
+        treeManager.Init(this, CreateTreeHud);
+        enemyManager.Init(this, GetInGameGold);
         HouseInit();
 
-        stageTreeManager.CreateTree();
+        treeManager.CreateTrees();
 
         hudManager.Hide();
     }
 
+    private void GetInGameGold(Vector3 enemyPos, int dropGold)
+    {
+        _inGameGold += dropGold;
+
+        var randomPos = Random.insideUnitCircle;
+
+        var originScreenPos = gameCamera.WorldToScreenPoint(enemyPos);
+
+        var secondScreenPos =  gameCamera.WorldToScreenPoint(enemyPos + new Vector3(randomPos.x, randomPos.y));
+
+        uiManager.ShowInGameGoldAnimation(originScreenPos, secondScreenPos, _inGameGold);
+    }
+
     private void GameStart()
     {
+        _inGameGold = 0;
+
+        treeManager.RefreshTrees();
+
         _house.Set();
 
-        SetGameState(GameState.Playing);
-
         hudManager.Show();
+
+        SetGameState(GameState.Playing);
 
         Debug.LogError("GameStart");
 
         SetStage(1);
     }
-
-
-    //stageinfo waves -> wave -> enemies
 
     private void SetStage(int stageId)
     {
@@ -89,11 +105,14 @@ public class StageManager : MonoBehaviour
 
         Debug.LogError($"Start Stage {stageId}");
 
+        uiManager.SetStage(stageId);
+
         _stageId = stageId;
 
         _stageInfo = InfoManager.StageInfos[stageId];
 
         _waveTerm = _stageInfo.WaveTerm;
+
         _waves = _stageInfo.Waves;
 
         SetWave(0);
@@ -103,11 +122,13 @@ public class StageManager : MonoBehaviour
     {
         Debug.LogError($"StartWaveIdx {waveIdx}");
 
+        uiManager.SetWave(waveIdx);
+
         _currWaveIdx = waveIdx;
 
         var enemies = InfoManager.WaveInfos[_waves[_currWaveIdx]].Enemies;
 
-        stageEnemyManager.CreateEnemies(enemies);
+        enemyManager.CreateEnemies(enemies);
     }
 
     private void GameEnd()
@@ -116,11 +137,11 @@ public class StageManager : MonoBehaviour
 
         SetGameState(GameState.Lobby);
 
-        stageEnemyManager.Clear();
-        stageTreeManager.Clear();
-        hudManager.Hide();
+        uiManager.GameEnd();
 
-        uiManager.ChangeShowType(StageUiManager.ShowType.Ready);
+        enemyManager.Clear();
+        treeManager.Clear();
+        hudManager.Hide();
     }
 
     private void HouseInit()
@@ -166,7 +187,7 @@ public class StageManager : MonoBehaviour
         }
 
         hudManager.UpdateObjs();
-        stageTreeManager.UpdateObjs(dt);
+        treeManager.UpdateObjs(dt);
     }
 
     private void NextWave()

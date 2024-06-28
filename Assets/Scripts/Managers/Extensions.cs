@@ -22,14 +22,23 @@ public static class Extensions
     {
         return Object.Instantiate(obj, parent);
     }
+    public static void On(this GameObject obj)
+    {
+        obj.SetActive(true);
+    }
+
+    public static void Off(this GameObject obj)
+    {
+        obj.SetActive(false);
+    }
 
     public static void On<T>(this T obj) where T : MonoBehaviour
     {
-        obj.gameObject.SetActive(true);
+        obj.gameObject.On();
     }
 
     public static void Off<T>(this T obj) where T : MonoBehaviour
     {
-        obj.gameObject.SetActive(false);
+        obj.gameObject.Off();
     }
 }

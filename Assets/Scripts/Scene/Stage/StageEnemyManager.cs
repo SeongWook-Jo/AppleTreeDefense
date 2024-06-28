@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -14,9 +15,13 @@ public class StageEnemyManager : MonoBehaviour
 
     private StageManager _manager;
 
-    public void Init(StageManager manager)
+    private Action<Vector3, int> _enemyDieAction;
+
+    public void Init(StageManager manager, Action<Vector3, int> enemyDieAction)
     {
         _manager = manager;
+
+        _enemyDieAction = enemyDieAction;
 
         _enemyPref = ResourceManager.GetPref<Enemy>();
 
@@ -43,7 +48,7 @@ public class StageEnemyManager : MonoBehaviour
 
     private void OnGet(Enemy enemy)
     {
-        var randomYPos = Random.Range(-0.5f, 0.5f);
+        var randomYPos = UnityEngine.Random.Range(-0.5f, 0.5f);
 
         enemy.SetRandomPos(Vector3.up * randomYPos);
 
@@ -71,6 +76,7 @@ public class StageEnemyManager : MonoBehaviour
 
     private void EnemyDieAction(Enemy enemy)
     {
+        _enemyDieAction?.Invoke(enemy.transform.position, enemy.Info.DropGold);
         //dropGold, missionCheck, 
         ReturnToPool(enemy);
     }

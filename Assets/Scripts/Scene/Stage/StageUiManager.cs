@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class StageUiManager : MonoBehaviour
@@ -8,40 +9,58 @@ public class StageUiManager : MonoBehaviour
     public enum ShowType
     {
         Lobby,
-        Ready,
         Playing,
     }
 
-    public StageUiTop uiTop;
     public StageUiLobby uiLobby;
-    public StageUiReady uiReady;
-    public StageUiPlaying uiPlaying;
+    public StageUiStage uiStage;
 
     private StageManager _manager;
 
-    private Action _startAction;
-    
     public void Init(StageManager manager, Action startAction)
     {
         _manager = manager;
 
-        _startAction = startAction;
+        uiStage.Init();
 
-        uiReady.Init(StartAction);
+        uiStage.SetStartAction(startAction);
     }
 
-    private void StartAction()
+    public void GameEnd()
     {
-        ChangeShowType(ShowType.Playing);
+        uiStage.ShowStartBtn(true);
 
-        _startAction?.Invoke();
+        uiStage.ShowInGameGold(false);
+        
+        uiStage.ShowWaveText(false);
+    }
+
+    public void SetStage(int stageId)
+    {
+        uiStage.SetStage(stageId);
+    }
+
+    public void SetWave(int waveIdx)
+    {
+        uiStage.SetWave(waveIdx + 1);
     }
 
     public void ChangeShowType(ShowType showType)
     {
         if (showType == ShowType.Playing)
-            uiReady.Off();
+        {
+            uiStage.On();
+            uiLobby.Off();
+        }
         else
-            uiReady.On();
+        {
+            uiStage.Off();
+            uiLobby.On();
+        }
+    }
+
+    public void ShowInGameGoldAnimation(Vector3 originPos, Vector3 secondPos, int targetGold)
+    {
+        uiStage.ShowInGameGoldAnimation(originPos, secondPos, targetGold);
     }
 }

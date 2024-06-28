@@ -16,8 +16,8 @@ public class Tree : MonoBehaviour, IPointerClickHandler
     private List<Apple> _attachedAppleList;
     private List<Apple> _activeAppleList;
 
-    private float _createTime;
-    private float _tempTime;
+    private float _createAppleTime;
+    private float _createAppleRemainTime;
 
     private int _gardenId;
     private int _createAppleCount;
@@ -25,6 +25,10 @@ public class Tree : MonoBehaviour, IPointerClickHandler
     private TreeInstance _tree;
 
     private Action<int> _lobbyStateClickAction;
+
+    private Action _showHudAction;
+
+    private Action _hideHudAction;
 
     public void Init(int gardenId, TreeInstance tree, Action<Tree> createAction, Action<int> lobbyStateClickAction)
     {
@@ -41,10 +45,15 @@ public class Tree : MonoBehaviour, IPointerClickHandler
         _attachedAppleList = new List<Apple>();
         _activeAppleList = new List<Apple>();
 
-        _createTime = _tree.GetGrowSpeed();
-        _createAppleCount = _tree.GetAppleCount();
-
         createAction?.Invoke(this);
+    }
+
+    public void Refresh()
+    {
+        _createAppleRemainTime = 0f;
+        _showHudAction?.Invoke();
+        _createAppleTime = _tree.GetGrowSpeed();
+        _createAppleCount = _tree.GetAppleCount();
     }
 
     public void UpdateObj(float dt)
@@ -52,11 +61,13 @@ public class Tree : MonoBehaviour, IPointerClickHandler
         if (gameObject.activeSelf == false)
             return;
 
-        _tempTime += dt;
+        _createAppleRemainTime += dt;
 
-        if (_createTime < _tempTime)
+        if (_createAppleTime < _createAppleRemainTime)
         {
-            _tempTime = 0;
+            _hideHudAction?.Invoke();
+
+            _createAppleRemainTime = 0;
 
             while (_attachedAppleList.Count < _createAppleCount)
             {
@@ -67,6 +78,13 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     public void AppleDrop()
     {
+        if (_attachedAppleList.Count <= 0)
+            return;
+
+        _createAppleRemainTime = 0f;
+
+        _showHudAction?.Invoke();
+
         foreach (var apple in _attachedAppleList)
             apple.Drop();
 
@@ -125,7 +143,7 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     public float GetCreateProgress()
     {
-        return _tempTime / _createTime;
+        return _createAppleRemainTime / _createAppleTime;
     }
 
     public void Clear()
@@ -134,5 +152,15 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
         while (_activeAppleList.Count > 0)
             _applePool.Release(_activeAppleList[0]);
+    }
+
+    public void SetHideHudAction(Action action)
+    {
+        _hideHudAction = action;
+    }
+
+    public void SetShowHudAction(Action action)
+    {
+        _showHudAction = action;
     }
 }

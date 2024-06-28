@@ -13,6 +13,10 @@ public class StageHudTreeObj : MonoBehaviour
     {
         _tree = tree;
 
+        _tree.SetShowHudAction(Show);
+
+        _tree.SetHideHudAction(Hide);
+
         var ScreenPos = camera.WorldToScreenPoint(tree.transform.position);
 
         transform.position = ScreenPos;
@@ -27,4 +31,15 @@ public class StageHudTreeObj : MonoBehaviour
     {
         front.fillAmount = progress;
     }
+
+    private void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
 }

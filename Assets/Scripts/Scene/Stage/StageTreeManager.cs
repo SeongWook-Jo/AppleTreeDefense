@@ -29,7 +29,7 @@ public class StageTreeManager : MonoBehaviour
         _createTreeAction = createTreeAction;
     }
 
-    public void CreateTree()
+    public void CreateTrees()
     {
         foreach(var pos in treePos)
         {
@@ -55,6 +55,14 @@ public class StageTreeManager : MonoBehaviour
             _treeList.Add(treeObj);
 
             idx++;
+        }
+    }
+
+    public void RefreshTrees()
+    {
+        foreach (var tree in _treeList)
+        {
+            tree.Refresh();
         }
     }
 
