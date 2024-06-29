@@ -118,4 +118,9 @@ public class Player
 
         Mathf.Clamp(Gold, 0, int.MaxValue);
     }
+
+    public void OpenTree(int gardenId)
+    {
+        TreeList.Add(gardenId, new TreeInstance(1, 1, 1));
+    }
 }

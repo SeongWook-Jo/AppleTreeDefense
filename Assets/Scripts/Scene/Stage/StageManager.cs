@@ -184,6 +184,34 @@ public class StageManager : MonoBehaviour
 
     public void ClickTreeInLobby(int gardenId)
     {
+        var player = Player.Instance;
+
+        var gardenInfo = InfoManager.GardenInfos[gardenId];
+        //Buy Step
+        if (Player.Instance.TreeList.ContainsKey(gardenId) == false)
+        {
+            if (player.LastestClearStage < gardenInfo.OpenStage)
+            {
+                Debug.LogError("Lack Stage");
+                return;
+            }
+            else if (player.Gold < gardenInfo.BuyGold)
+            {
+                Debug.LogError("Lack Gold");
+                return;
+            }
+
+            player.OpenTree(gardenId);
+
+            player.AddGold(-gardenInfo.BuyGold);
+
+            treeManager.RefreshTrees();
+
+            player.Save();
+
+            return;
+        }
+
         uiManager.ShowUpgradeTree(gardenId);
     }
 
