@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -9,7 +10,13 @@ public class StageUiManager : MonoBehaviour
     public enum ShowType
     {
         Lobby,
-        Playing,
+        Stage,
+    }
+
+    public enum UpgradeType
+    {
+        Tree,
+        House,
     }
 
     public StageUiLobby uiLobby;
@@ -24,6 +31,8 @@ public class StageUiManager : MonoBehaviour
         uiStage.Init();
 
         uiStage.SetStartAction(startAction);
+
+        uiLobby.SetClickBackBtnAction(() => ChangeShowType(ShowType.Stage));
     }
 
     public void GameEnd()
@@ -47,7 +56,7 @@ public class StageUiManager : MonoBehaviour
 
     public void ChangeShowType(ShowType showType)
     {
-        if (showType == ShowType.Playing)
+        if (showType == ShowType.Stage)
         {
             uiStage.On();
             uiLobby.Off();
@@ -62,5 +71,33 @@ public class StageUiManager : MonoBehaviour
     public void ShowInGameGoldAnimation(Vector3 originPos, Vector3 secondPos, int targetGold)
     {
         uiStage.ShowInGameGoldAnimation(originPos, secondPos, targetGold);
+    }
+
+    public void RefreshGold(int gold)
+    {
+        uiStage.SetGold(gold);
+    }
+
+    public void ShowUpgradeHouse()
+    {
+        ChangeShowType(ShowType.Lobby);
+
+        uiLobby.ShowHouseUpgrade();
+    }
+
+    public void ShowUpgradeTree(int gardenId)
+    {
+        if (Player.Instance.TreeList.ContainsKey(gardenId) == false)
+        {
+            Debug.LogError("TryButGarden");
+
+            return;
+        }
+
+        ChangeShowType(ShowType.Lobby);
+
+        var tree = Player.Instance.TreeList[gardenId];
+
+        uiLobby.ShowTreeUpgrade(tree);
     }
 }

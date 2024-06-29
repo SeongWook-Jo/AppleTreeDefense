@@ -28,6 +28,11 @@ public class StageUiStage : MonoBehaviour
         ShowWaveText(false);
     }
 
+    public void SetGold(int gold)
+    {
+        goldText.text = gold.ToString();
+    }
+
     public void SetStartAction(Action startAction)
     {
         _startAction = startAction;

@@ -31,31 +31,25 @@ public class StageTreeManager : MonoBehaviour
 
     public void CreateTrees()
     {
-        foreach(var pos in treePos)
-        {
-            _tilePref.MakeInstance(pos);
-        }
+        var gardenKey = 1;
 
-        var idx = 0;
-
-        foreach (var garden in Player.Instance.GardenList)
+        foreach (var treetran in treePos)
         {
-            var gardenInfo = InfoManager.GardenInfos[garden.Key];
+            var gardenInfo = InfoManager.GardenInfos[gardenKey];
 
             if (gardenInfo.OpenStage > Player.Instance.LastestClearStage)
                 continue;
 
-            if (garden.Value.IsBuy == false)
-                continue;
+            var treeObj = _treePref.MakeInstance(treetran);
 
-            var treeObj = _treePref.MakeInstance(treePos[idx]);
-
-            treeObj.Init(garden.Key, Player.Instance.TreeList[garden.Key], _createTreeAction, _manager.ClickTreeInLobby);
+            treeObj.Init(gardenKey, _createTreeAction, _manager.ClickTreeInLobby);
 
             _treeList.Add(treeObj);
 
-            idx++;
+            gardenKey++;
         }
+
+        RefreshTrees();
     }
 
     public void RefreshTrees()

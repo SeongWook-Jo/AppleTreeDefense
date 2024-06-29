@@ -34,12 +34,12 @@ public class StageHudTreeObj : MonoBehaviour
 
     private void Hide()
     {
-        gameObject.SetActive(false);
+        gameObject.Off();
     }
 
     private void Show()
     {
-        gameObject.SetActive(true);
+        gameObject.On();
     }
 
 }

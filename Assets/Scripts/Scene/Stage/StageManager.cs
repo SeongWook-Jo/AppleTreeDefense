@@ -45,6 +45,13 @@ public class StageManager : MonoBehaviour
         SetGameState(GameState.Lobby);
     }
 
+    private void RefreshGold()
+    {
+        var currGold = Player.Instance.Gold;
+
+        uiManager.RefreshGold(currGold);
+    }
+
     private void SetGameState(GameState state)
     {
         CurrGameState = state;
@@ -62,6 +69,10 @@ public class StageManager : MonoBehaviour
         treeManager.CreateTrees();
 
         hudManager.Hide();
+
+        RefreshGold();
+
+        uiManager.ChangeShowType(StageUiManager.ShowType.Stage);
     }
 
     private void GetInGameGold(Vector3 enemyPos, int dropGold)
@@ -91,14 +102,14 @@ public class StageManager : MonoBehaviour
 
         Debug.LogError("GameStart");
 
-        SetStage(1);
+        SetStage(Player.Instance.LastestClearStage);
     }
 
     private void SetStage(int stageId)
     {
         if (InfoManager.StageInfos.ContainsKey(stageId) == false)
         {
-            Debug.LogError("StageEnd");
+            Debug.LogError("AllStageEnd");
 
             return;
         }
@@ -137,6 +148,15 @@ public class StageManager : MonoBehaviour
 
         SetGameState(GameState.Lobby);
 
+        if (_stageId > Player.Instance.LastestClearStage)
+        {
+            Player.Instance.SetLatestStage(_stageId);
+        }
+
+        Player.Instance.AddGold(_inGameGold);
+
+        RefreshGold();
+
         uiManager.GameEnd();
 
         enemyManager.Clear();
@@ -157,12 +177,12 @@ public class StageManager : MonoBehaviour
 
     private void ClickHouse()
     {
-        Debug.LogError("clickhouse");
+        uiManager.ShowUpgradeHouse();
     }
 
     public void ClickTreeInLobby(int gardenId)
     {
-        Debug.LogError($"clicktreeinlobby id {gardenId}");
+        uiManager.ShowUpgradeTree(gardenId);
     }
 
     private void CreateTreeHud(Tree tree)

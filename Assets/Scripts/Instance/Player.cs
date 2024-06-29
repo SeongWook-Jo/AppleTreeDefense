@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using UnityEngine;
 
 [Serializable]
 public class Player
@@ -68,9 +69,11 @@ public class Player
             _treeList.Add(i, new TreeInstance(1, 1, 1));
         }
 
-        _lastestClearStage = 10;
-        
+        _lastestClearStage = 1;
+
         House.SetHealthLevel(1);
+
+        _gold = 0;
 
         UnityEngine.Debug.LogError("CreateNewAccountForTest");
     }
@@ -108,5 +111,17 @@ public class Player
         CreateNewAccountForTest();
 
         _loadEndAction?.Invoke();
+    }
+
+    public void SetLatestStage(int stage)
+    {
+        _lastestClearStage = stage;
+    }
+
+    public void AddGold(int gold)
+    {
+        _gold += gold;
+
+        Mathf.Clamp(_gold, 0, int.MaxValue);
     }
 }

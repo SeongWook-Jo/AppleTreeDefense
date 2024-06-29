@@ -7,6 +7,10 @@ using UnityEngine.Pool;
 
 public class Tree : MonoBehaviour, IPointerClickHandler
 {
+    public bool IsTreeActive { get; private set; }
+
+    public GameObject treeObj;
+
     public float appleDropSpeed;
 
     private Apple _applePref;
@@ -30,11 +34,9 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     private Action _hideHudAction;
 
-    public void Init(int gardenId, TreeInstance tree, Action<Tree> createAction, Action<int> lobbyStateClickAction)
+    public void Init(int gardenId, Action<Tree> createAction, Action<int> lobbyStateClickAction)
     {
         _gardenId = gardenId;
-
-        _tree = tree;
 
         _lobbyStateClickAction = lobbyStateClickAction;
 
@@ -50,6 +52,23 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     public void Refresh()
     {
+        if (Player.Instance.TreeList.ContainsKey(_gardenId) == false)
+        {
+            IsTreeActive = false;
+
+            treeObj.Off();
+
+            _hideHudAction?.Invoke();
+
+            return;
+        }
+
+        _tree = Player.Instance.TreeList[_gardenId];
+
+        IsTreeActive = true;
+
+        treeObj.On();
+
         _createAppleRemainTime = 0f;
         _showHudAction?.Invoke();
         _createAppleTime = _tree.GetGrowSpeed();
@@ -58,7 +77,7 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     public void UpdateObj(float dt)
     {
-        if (gameObject.activeSelf == false)
+        if (IsTreeActive == false)
             return;
 
         _createAppleRemainTime += dt;
@@ -78,6 +97,9 @@ public class Tree : MonoBehaviour, IPointerClickHandler
 
     public void AppleDrop()
     {
+        if (IsTreeActive == false)
+            return;
+
         if (_attachedAppleList.Count <= 0)
             return;
 
