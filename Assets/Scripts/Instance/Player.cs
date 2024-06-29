@@ -29,26 +29,18 @@ public class Player
 
     #region Property
 
-    public int Gold => _gold;
-    private int _gold;
+    public int Gold;
 
-    public int LastestClearStage => _lastestClearStage;
-    private int _lastestClearStage;
+    public int LastestClearStage;
 
     #endregion
 
     #region Instance
-    public HouseInstance House => _house;
+    public HouseInstance House;
 
-    private HouseInstance _house;
+    public Dictionary<int, GardenInstance> GardenList;
 
-    public Dictionary<int, GardenInstance> GardenList => _gardenList;
-
-    private Dictionary<int, GardenInstance> _gardenList;
-
-    public Dictionary<int, TreeInstance> TreeList => _treeList;
-
-    private Dictionary<int, TreeInstance> _treeList;
+    public Dictionary<int, TreeInstance> TreeList;
 
     #endregion
 
@@ -56,26 +48,28 @@ public class Player
 
     public void Init()
     {
-        _gardenList = new Dictionary<int, GardenInstance>();
-        _treeList = new Dictionary<int, TreeInstance>();
-        _house = new HouseInstance();
+        GardenList = new Dictionary<int, GardenInstance>();
+        TreeList = new Dictionary<int, TreeInstance>();
+        House = new HouseInstance();
     }
 
     private void CreateNewAccountForTest()
     {
-        for (int i = 1; i < 5; i++)
+        for (int i = 1; i < 2; i++)
         {
-            _gardenList.Add(i, new GardenInstance(true));
-            _treeList.Add(i, new TreeInstance(1, 1, 1));
+            GardenList.Add(i, new GardenInstance(true));
+            TreeList.Add(i, new TreeInstance(1, 1, 1));
         }
 
-        _lastestClearStage = 1;
+        LastestClearStage = 1;
 
         House.SetHealthLevel(1);
 
-        _gold = 0;
+        Gold = 0;
 
         UnityEngine.Debug.LogError("CreateNewAccountForTest");
+
+        Save();
     }
 
     public void Save()
@@ -115,13 +109,13 @@ public class Player
 
     public void SetLatestStage(int stage)
     {
-        _lastestClearStage = stage;
+        LastestClearStage = stage;
     }
 
     public void AddGold(int gold)
     {
-        _gold += gold;
+        Gold += gold;
 
-        Mathf.Clamp(_gold, 0, int.MaxValue);
+        Mathf.Clamp(Gold, 0, int.MaxValue);
     }
 }

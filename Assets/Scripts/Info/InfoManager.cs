@@ -9,7 +9,7 @@ public class InfoManager
     public static HouseInfo HouseInfo;
     public static Dictionary<int, GardenInfo> GardenInfos;
     public static Dictionary<int, TreeInfo> TreeInfos;
-    public static Dictionary<int, TreeStatInfo> TreeStatInfo;
+    public static Dictionary<int, TreeStatInfo> TreeStatInfos;
     public static Dictionary<int, EnemyInfo> EnemyInfos;
     public static Dictionary<int, StageInfo> StageInfos;
     public static Dictionary<int, WaveInfo> WaveInfos;
@@ -19,7 +19,7 @@ public class InfoManager
         HouseInfo = GetHouseData("HouseData");
         GardenInfos = GetGardenData("GardenData");
         TreeInfos = GetTreeData("TreeData");
-        TreeStatInfo = GetTreeStatData("TreeStatData");
+        TreeStatInfos = GetTreeStatData("TreeStatData");
         EnemyInfos = GetEnemyData("EnemyData");
         StageInfos = GetStageData("StageData");
         WaveInfos = GetWaveData("WaveData");
@@ -94,14 +94,14 @@ public class InfoManager
             var growSpeedBaseValue = float.Parse(item["GrowSpeedBaseValue"].ToString());
             var growSpeedUpgradeFactor = float.Parse(item["GrowSpeedUpgradeFactor"].ToString());
             var growSpeedMaxLevel = int.Parse(item["GrowSpeedMaxLevel"].ToString());
-            var growSpeedBaseCost = float.Parse(item["GrowSpeedBaseCost"].ToString());
-            var growSpeedCostFactor = float.Parse(item["GrowSpeedCostFactor"].ToString());
+            var growSpeedBaseCost = int.Parse(item["GrowSpeedBaseCost"].ToString());
+            var growSpeedCostFactor = int.Parse(item["GrowSpeedCostFactor"].ToString());
 
             var appleCountBaseValue = float.Parse(item["AppleCountBaseValue"].ToString());
             var appleCountUpgradeFactor = float.Parse(item["AppleCountUpgradeFactor"].ToString());
             var appleCountMaxLevel = int.Parse(item["AppleCountMaxLevel"].ToString());
-            var appleCountBaseCost = float.Parse(item["AppleCountBaseCost"].ToString());
-            var appleCountCostFactor = float.Parse(item["AppleCountCostFactor"].ToString());
+            var appleCountBaseCost = int.Parse(item["AppleCountBaseCost"].ToString());
+            var appleCountCostFactor = int.Parse(item["AppleCountCostFactor"].ToString());
 
             var treeStatInfo = new TreeStatInfo(
                 growSpeedBaseValue, growSpeedUpgradeFactor, growSpeedMaxLevel,

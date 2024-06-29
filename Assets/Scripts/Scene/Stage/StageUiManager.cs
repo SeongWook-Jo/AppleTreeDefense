@@ -32,6 +32,8 @@ public class StageUiManager : MonoBehaviour
 
         uiStage.SetStartAction(startAction);
 
+        uiLobby.Init();
+
         uiLobby.SetClickBackBtnAction(() => ChangeShowType(ShowType.Stage));
     }
 
@@ -71,6 +73,11 @@ public class StageUiManager : MonoBehaviour
     public void ShowInGameGoldAnimation(Vector3 originPos, Vector3 secondPos, int targetGold)
     {
         uiStage.ShowInGameGoldAnimation(originPos, secondPos, targetGold);
+    }
+
+    private void OnEnable()
+    {
+        RefreshGold(Player.Instance.Gold);
     }
 
     public void RefreshGold(int gold)

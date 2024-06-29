@@ -7,9 +7,9 @@ public class TreeStatInfo
 {
     public TreeStatInfo(
         float growSpeedBaseValue, float growSpeedUpgradeFactor, int growSpeedMaxLevel,
-        float growSpeedBaseCost, float growSpeedCostFactor, float appleCountBaseValue,
-        float appleCountUpgradeFactor, int appleCountMaxLevel, float appleCountBaseCost,
-        float appleCountCostFactor)
+        int growSpeedBaseCost, int growSpeedCostFactor, float appleCountBaseValue,
+        float appleCountUpgradeFactor, int appleCountMaxLevel, int appleCountBaseCost,
+        int appleCountCostFactor)
     {
         GrowSpeedBaseValue = growSpeedBaseValue;
         GrowSpeedUpgradeFactor = growSpeedUpgradeFactor;
@@ -27,12 +27,12 @@ public class TreeStatInfo
     public float GrowSpeedBaseValue { get; private set; }
     public float GrowSpeedUpgradeFactor { get; private set; }
     public int GrowSpeedMaxLevel { get; private set; }
-    public float GrowSpeedBaseCost { get; private set; }
-    public float GrowSpeedCostFactor { get; private set; }
+    public int GrowSpeedBaseCost { get; private set; }
+    public int GrowSpeedCostFactor { get; private set; }
     
     public float AppleCountBaseValue { get; private set; }
     public float AppleCountUpgradeFactor { get; private set; }
     public int AppleCountMaxLevel { get; private set; }
-    public float AppleCountBaseCost { get; private set; }
-    public float AppleCountCostFactor { get; private set; }
+    public int AppleCountBaseCost { get; private set; }
+    public int AppleCountCostFactor { get; private set; }
 }

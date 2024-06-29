@@ -155,6 +155,8 @@ public class StageManager : MonoBehaviour
 
         Player.Instance.AddGold(_inGameGold);
 
+        Player.Instance.Save();
+
         RefreshGold();
 
         uiManager.GameEnd();

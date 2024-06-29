@@ -2,7 +2,7 @@ using System;
 [Serializable]
 public class HouseInstance
 {
-    public int HealthLevel { get; private set; }
+    public int HealthLevel;
 
     public void SetHealthLevel(int level)
     {
@@ -18,5 +18,19 @@ public class HouseInstance
         health += (HealthLevel - 1) * info.HealthUpgradeFactor;
         
         return health;
+    }
+
+    public int GetHealthUpgradePrice()
+    {
+        var info = InfoManager.HouseInfo;
+
+        return info.HealthBaseCost + ((HealthLevel - 1) * info.HealthCostFactor);
+    }
+
+    public void UpgradeHealth()
+    {
+        HealthLevel++;
+
+        Player.Instance.Save();
     }
 }

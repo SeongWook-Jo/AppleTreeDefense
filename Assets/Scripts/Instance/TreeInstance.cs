@@ -7,38 +7,63 @@ public class TreeInstance
         TreeId = treeId;
         GrowSpeedLevel = growSpeedLevel;
         AppleCountLevel = appleCountLevel;
+
+        var treeInfo = InfoManager.TreeInfos[TreeId];
+        StatInfo = InfoManager.TreeStatInfos[treeInfo.StatId];
     }
     
     public int TreeId { get; private set; }
     public int GrowSpeedLevel { get; private set; }
     public int AppleCountLevel { get; private set; }
+    public TreeStatInfo StatInfo { get; private set; } 
 
     public float GetGrowSpeed()
     {
-        var statInfo = GetStatInfo();
+        float speed = StatInfo.GrowSpeedBaseValue;
 
-        float speed = statInfo.GrowSpeedBaseValue;
-
-        speed -= (GrowSpeedLevel - 1) * statInfo.GrowSpeedUpgradeFactor;
+        speed -= (GrowSpeedLevel - 1) * StatInfo.GrowSpeedUpgradeFactor;
 
         return speed;
     }
 
     public int GetAppleCount()
     {
-        var statInfo = GetStatInfo();
+        float count = StatInfo.AppleCountBaseValue;
 
-        float count = statInfo.AppleCountBaseValue;
-
-        count += (AppleCountLevel - 1) * statInfo.AppleCountUpgradeFactor;
+        count += (AppleCountLevel - 1) * StatInfo.AppleCountUpgradeFactor;
 
         return (int)count;
     }
 
-    private TreeStatInfo GetStatInfo()
+    public int GetAppleCountUpgradePrice()
     {
-        var treeInfo = InfoManager.TreeInfos[TreeId];
+        var baseCost = StatInfo.AppleCountBaseCost;
 
-        return InfoManager.TreeStatInfo[treeInfo.StatId];
+        var levelFactor = StatInfo.AppleCountCostFactor;
+
+        return baseCost + ((AppleCountLevel - 1) * levelFactor);
+    }
+
+    public int GetGrowSpeedUpgradePrice()
+    {
+        var baseCost = StatInfo.GrowSpeedBaseCost;
+
+        var levelFactor = StatInfo.GrowSpeedCostFactor;
+
+        return baseCost + ((GrowSpeedLevel - 1) * levelFactor);
+    }
+
+    public void UpgradeAppleCount()
+    {
+        AppleCountLevel++;
+
+        Player.Instance.Save();
+    }
+
+    public void UpgradeGrowSpeed()
+    {
+        GrowSpeedLevel++;
+
+        Player.Instance.Save();
     }
 }
