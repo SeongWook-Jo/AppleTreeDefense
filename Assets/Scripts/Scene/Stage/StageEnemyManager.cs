@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 
 public class StageEnemyManager : MonoBehaviour
 {
-    public Transform enemyPos;
+    public Transform enemyHouse;
 
     private ObjectPool<Enemy> _enemyPool;
 
@@ -28,6 +28,8 @@ public class StageEnemyManager : MonoBehaviour
         _activeEnemyList = new List<Enemy>();
 
         _enemyPool = new ObjectPool<Enemy>(CreateEnemy, OnGet, OnRelease, OnDestroyObj);
+
+        ResourceManager.GetPref<EnemyHouse>().MakeInstance(enemyHouse);
     }
 
     public void CreateEnemies(int[] enemies)
@@ -41,7 +43,7 @@ public class StageEnemyManager : MonoBehaviour
 
     private Enemy CreateEnemy()
     {
-        var enemy = _enemyPref.MakeInstance(enemyPos);
+        var enemy = _enemyPref.MakeInstance(enemyHouse);
         enemy.Init(EnemyDieAction);
         return enemy;
     }
@@ -77,7 +79,7 @@ public class StageEnemyManager : MonoBehaviour
     private void EnemyDieAction(Enemy enemy)
     {
         _enemyDieAction?.Invoke(enemy.transform.position, enemy.Info.DropGold);
-        //dropGold, missionCheck, 
+        //dropGold, missionCheck,
         ReturnToPool(enemy);
     }
 
