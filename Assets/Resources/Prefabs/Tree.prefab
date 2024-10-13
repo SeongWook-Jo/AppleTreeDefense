@@ -93,6 +93,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treeObj: {fileID: 7762209599868663349}
+  treeSprite: {fileID: 1887685161483257610}
+  tileSprite: {fileID: 6620084738017655125}
   appleDropSpeed: 5
 --- !u!1 &5538391818407018908
 GameObject:
@@ -167,7 +169,7 @@ SpriteRenderer:
   m_SortingLayerID: -978368757
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7c7cb26c08dd43e48860647d01bdbc52, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9b2b666593cd5954581cc6cb20ddf5b1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

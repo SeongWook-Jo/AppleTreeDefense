@@ -7,6 +7,8 @@ public class Apple : MonoBehaviour
 {
     private static readonly float MaxDropTime = 5f;
 
+    public SpriteRenderer sprite;
+
     private bool _isDrop;
 
     private bool _isAlive;
@@ -19,6 +21,8 @@ public class Apple : MonoBehaviour
 
     public void Init(Action<Apple> releaseAction)
     {
+        sprite.sprite = ResourceManager.GetObjectSprite("apple");
+
         _releaseAction = releaseAction;
     }
 

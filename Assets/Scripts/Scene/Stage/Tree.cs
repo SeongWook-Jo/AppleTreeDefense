@@ -4,12 +4,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 using UnityEngine.Pool;
+using UnityEngine.U2D;
 
 public class Tree : MonoBehaviour, IPointerClickHandler
 {
     public bool IsTreeActive { get; private set; }
 
     public GameObject treeObj;
+
+    public SpriteRenderer treeSprite;
+    public SpriteRenderer tileSprite;
 
     public float appleDropSpeed;
 
@@ -47,6 +51,9 @@ public class Tree : MonoBehaviour, IPointerClickHandler
         _attachedAppleList = new List<Apple>();
         _activeAppleList = new List<Apple>();
 
+        treeSprite.sprite = ResourceManager.GetObjectSprite("tree");
+        tileSprite.sprite = ResourceManager.GetObjectSprite("tile01");
+        
         createAction?.Invoke(this);
     }
 

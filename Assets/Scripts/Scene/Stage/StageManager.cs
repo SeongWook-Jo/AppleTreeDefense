@@ -24,8 +24,6 @@ public class StageManager : MonoBehaviour
 
     private int[] _waves;
 
-    private int[] _enemies;
-
     private int _currWaveIdx;
 
     private int _stageId;
